@@ -1,7 +1,7 @@
 # geonames-cup
 Geonames places processor and CUP GPS file converter
 
-Install the requirements: `pip install -r requirements.txt`
+Install the requirements: `pip install aerofiles`
 
 Download and unzip the wanted `<country>.zip` file from geonames.org:
 [http://download.geonames.org/export/dump/](http://download.geonames.org/export/dump/)
