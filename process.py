@@ -7,11 +7,19 @@ import csv
 from aerofiles.seeyou import Writer
 
 
-def process(file_path, minpop=100):
-    data = parse_geonames_txt(file_path, minpop)
-    dirname, txt_name = os.path.split(file_path)
-    cup_path = os.path.join(dirname, txt_name[:-3] + 'cup')
-    write_cup(cup_path, data)
+presets = {
+    'full': 0,
+    'medium': 100,
+    'small': 5000
+}
+
+
+def process(file_path):
+    for preset, minpop in presets.items():
+        data = parse_geonames_txt(file_path, minpop)
+        dirname, txt_name = os.path.split(file_path)
+        cup_path = os.path.join(dirname, txt_name[:-4] + '-{}.cup'.format(preset))
+        write_cup(cup_path, data)
 
 
 def parse_geonames_txt(file_path, minpop):
@@ -51,17 +59,19 @@ def parse_geonames_txt(file_path, minpop):
 def write_cup(file_path, data):
     with open(file_path, 'wb') as fp:
         writer = Writer(fp)
-        for name, coordinates in data.items():
+        print(len(data), 'points')
+        for name in sorted(data.keys()):
+            coordinates = data[name]
             writer.write_waypoint(name, name, '', coordinates['lat'], coordinates['lon'])
 
 
 
 if len(sys.argv) == 1:
-    sys.exit('Usage: process.py country.txt <min population>')
+    sys.exit('Usage: process.py country.txt')
 
 if len(sys.argv) == 2:
     process(sys.argv[1])
 
-if len(sys.argv) == 3:
-    process(sys.argv[1], int(sys.argv[2]))
+# if len(sys.argv) == 3:
+    # process(sys.argv[1], int(sys.argv[2]))
 
